@@ -4,17 +4,6 @@ Created on 02/04/2010
 @author: Jr. Hames
 '''
 
-#edit the following options according to your needs
-PYRROT_DIR = ""
-DIRECTORIES = ["/path/to/your/video/files", "/path/to/your/video/files2"]
-LANGUAGES = ["pt","en"]
-HASHES_FILE = 'pyrrot-uploaded.prt'
-LOG_FILE = 'pyrrot-log.txt'
-MOVIE_EXTS = ['.avi', '.mkv', '.mp4', '.m4v', '.mov', '.mpg', '.wmv']
-SUBS_EXTS = ['.srt', '.sub']
-#end of configurations
-
-
 import logging
 import cPickle
 import io
@@ -26,12 +15,14 @@ import time
 import urllib
 import urllib2
 import urllib2_file
+import ConfigParser
 
 base_url = 'http://api.thesubdb.com/?{0}'
 user_agent = 'SubDB/1.0 (Pyrrot/0.1; http://github.com/jrhames/pyrrot-cli)'
 logger = None
 uploaded = {}
 retry = 0
+
 
 def get_hash(name):
     readsize = 64 * 1024
@@ -207,8 +198,26 @@ def init_logger():
     logger = logging.getLogger("Pyrrot2")
     logger.setLevel(logging.INFO)
 
+def init_config():
+    global PYRROT_DIR
+    global DIRECTORIES
+    global LANGUAGES
+    global HASHES_FILE
+    global LOG_FILE
+    global MOVIE_EXTS
+    global SUBS_EXTS
+    config = ConfigParser.SafeConfigParser()
+    config.read("config.ini")
+    PYRROT_DIR = config.get("DEFAULT", "pyrrot_dir")
+    DIRECTORIES = config.get("DEFAULT", "directories").split('|')
+    LANGUAGES = config.get("DEFAULT", "languages").split('|')
+    HASHES_FILE = config.get("DEFAULT", "hashes_file")
+    LOG_FILE = config.get("DEFAULT", "log_file")
+    MOVIE_EXTS = config.get("DEFAULT", "movie_exts").split('|')
+    SUBS_EXTS = config.get("DEFAULT", "subs_exts").split('|')
 
 if __name__ == '__main__':
+    init_config()
     parse_options()
     if PYRROT_DIR != "":
         os.chdir(PYRROT_DIR)
