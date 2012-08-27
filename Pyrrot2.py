@@ -4,6 +4,7 @@ Created on 02/04/2010
 @author: Jr. Hames
 '''
 
+import sys
 import logging
 import cPickle
 import io
@@ -207,8 +208,9 @@ def init_config():
     global LOG_FILE
     global MOVIE_EXTS
     global SUBS_EXTS
+    config_file = os.path.join(os.path.dirname(sys.argv[0]), "config.ini")
     config = ConfigParser.SafeConfigParser()
-    config.read("config.ini")
+    config.read(config_file)
     PYRROT_DIR = config.get("DEFAULT", "pyrrot_dir")
     DIRECTORIES = config.get("DEFAULT", "directories").split('|')
     LANGUAGES = config.get("DEFAULT", "languages").split('|')
