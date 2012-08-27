@@ -92,9 +92,10 @@ def get_movie_files(rootdir, with_subs=False):
     for root, subfolders, files in os.walk(rootdir):
         for file in files:
             name, ext = os.path.splitext(file)
-            if ext in MOVIE_EXTS:
-                if with_subs == has_subs(root, name):
-                    filelist.append(os.path.join(root, file))
+            if not name.startswith("._"):
+                if ext in MOVIE_EXTS:
+                    if with_subs == has_subs(root, name):
+                        filelist.append(os.path.join(root, file))
     return filelist
 
 def has_subs(root, name):
